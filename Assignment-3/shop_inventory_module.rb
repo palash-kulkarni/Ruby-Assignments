@@ -11,6 +11,8 @@ module ShopInventoryModule
 	  product_search_flag=0
 	  print "Enter the Product Name :"
 	  product_name=gets.chomp
+    puts "List is as :"
+    puts "Product_id,Product_Name,Price,Stock_Item,Company_Name :"
 	  inventory_file=File.open("inventory.txt","r+")
 	  inventory_file.each_line do |line|
 	    split_line=line.split(",")
