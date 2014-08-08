@@ -1,8 +1,11 @@
 #!/usr/bin/ruby
 $LOAD_PATH << "."
+
 require "shop_inventory_module"
+  
 class Shopkeeper
-  include shop_inventory
+  include ShopInventoryModule
+  
   @shop_name
   @shopkeeper_name
   @product_name
@@ -13,86 +16,84 @@ class Shopkeeper
 	
   def initialize
     @product_id=0
-	inventory_file=File.new("inventory.txt","a+")
-	inventory_file.close
-	temp_file=File.new("temp.txt","a+")
-	temp_file.close
-	order_file=File.new("inventory.txt","a+")
-	order_file.close
+	  inventory_file=File.new("inventory.txt","a+")
+	  inventory_file.close
+	  temp_file=File.new("temp.txt","a+")
+	  temp_file.close
   end
 
   def getter 
-	"Enter the Name of Shop"
-	@shop_name=gets.chomp
+	  print "Enter the Name of Shop"
+	  @shop_name=gets.chomp
   end
 
   def setter
-	return @shop_name
+	  return @shop_name
   end
 
   def shopkeeper_menu
-	answer='y'
-	while answer=='y' or answer=='Y' do
+	  answer='y'
+	  while answer=='y' or answer=='Y' do
       puts "1. Add Product"
-	  puts "2. Remove Product"
+	    puts "2. Remove Product"
       puts "3. List all products"
-	  puts "4. Search Product by name"
-	  puts "5. Edit Product details"
-	  puts "Select any option(1-5)"
-	  option=gets.chomp
-	  option=Integer(option)
-	  if(option==1)
-	    add_product
+	    puts "4. Search Product by name"
+	    puts "5. Edit Product details"
+	    puts "Select any option(1-5)"
+	    option=gets.chomp
+	    option=Integer(option)
+	    if(option==1)
+	      add_product
       elsif(option==2)
-		remove_product
-	  elsif(option==3)
-		list_all_product
-	  elsif(option==4)
-		search_product
-	  elsif(option==5)
-		edit_product_details
-	  else
-		puts "You have enterted the wrong choice"
+		    remove_product
+	    elsif(option==3)
+		    ShopInventoryModule.list_product
+	    elsif(option==4)
+		    ShopInventoryModule.search_product
+	    elsif(option==5)
+		    edit_product_details
+	    else
+		    puts "You have enterted the wrong choice"
+	    end
+	    puts "Do you want to select options again from menu?"
+	    answer=gets.chomp
 	  end
-	  puts "Do you want to select options again from menu?"
-	  answer=gets.chomp
-	end
   end
 
   def add_product
     @product_id+=1
-	puts "Enter the Product Name :"		
-	@product_name=gets.chomp
-	puts "Enter the Price :"
-	@price =gets.chomp
-	puts "Enter the Stock Item :"
-	@stock_item =gets.chomp
-	puts "Enter the company name :"
-	@company_name=gets.chomp
-	inventory_file=File.open("inventory.txt","a")
+	  puts "Enter the Product Name :"		
+	  @product_name=gets.chomp
+	  puts "Enter the Price :"
+	  @price =gets.chomp
+	  puts "Enter the Stock Item :"
+	  @stock_item =gets.chomp
+	  puts "Enter the company name :"
+	  @company_name=gets.chomp
+	  inventory_file=File.open("inventory.txt","a")
 	  if inventory_file
 	    inventory_file.write(@product_id)
-		inventory_file.write(",")
-		inventory_file.write(@product_name)
-		inventory_file.write(",")
-		inventory_file.write(@price)
-		inventory_file.write(",")
-		inventory_file.write(@stock_item)
-		inventory_file.write(",")
-		inventory_file.write(@company_name)
-		inventory_file.write("\n")
+		  inventory_file.write(",")
+		  inventory_file.write(@product_name)
+		  inventory_file.write(",")
+		  inventory_file.write(@price)
+		  inventory_file.write(",")
+		  inventory_file.write(@stock_item)
+		  inventory_file.write(",")
+		  inventory_file.write(@company_name)
+		  inventory_file.write("\n")
 	  else
-		puts "Unable to open file"
+		  puts "Unable to open file"
 	  end
-	inventory_file.close
+	  inventory_file.close
   end
 
   def remove_product
     print "Enter the product_id to remove Product :"
-	@product_id=gets.chomp
-	inventory_file=File.open("inventory.txt","r+")
-	temp_file=File.open("temp.txt","w+")
-	inventory_file.each_line do |line|
+	  @product_id=gets.chomp
+	  inventory_file=File.open("inventory.txt","r+")
+	  temp_file=File.open("temp.txt","w+")
+	  inventory_file.each_line do |line|
   	  split_line=line.split(",")
   	  unless split_line[0].eql?(@product_id)
   	    temp_file.write(line)
@@ -109,67 +110,29 @@ class Shopkeeper
   	temp_file.close
   end
 
-  def list_all_product
-	inventory_file=File.open("inventory.txt","r")
-	print inventory_file.read
-	inventory_file.close
-  end
-
-  def search_product
-	product_search_flag=0
-	line=""
-	print "Enter the Product Name :"
-	@product_name=gets.chomp
-	inventory_file=File.open("inventory.txt","r+")
-	inventory_file.each_line do |line|
-	  split_line=line.split(",")
-  	  if split_line[1]==(@product_name)
-  	    puts "Entered Product is found"
-  		puts "\n#{line}\n"
-  		product_search_flag=1
-  		break
-  	  end
-  	end
-  	if product_search_flag==0
-      puts "Entered Product is not found"
-  	end
-  end
-
   def edit_product_details
     product_search_flag=0
-	puts "Enter the product_id to edit its details"
-	@product_id=gets.chomp
-	puts "Enter the Product Name :"		
-	@product_name=gets.chomp
-	puts "Enter the Price :"
-	@price =gets.chomp
-	puts "Enter the Stock Item :"
-	@stock_item =gets.chomp
-	puts "Enter the company name :"
-	@company_name=gets.chomp
-	inventory_file=File.open("inventory.txt","r+")
-	temp_file=File.open("temp.txt","w+")
-	inventory_file.each_line do |line|
+	  puts "Enter the product_id to edit its details"
+	  @product_id=gets.chomp
+	  puts "Enter the Product Name :"		
+	  @product_name=gets.chomp
+	  puts "Enter the Price :"
+	  @price =gets.chomp
+	  puts "Enter the Stock Item :"
+	  @stock_item =gets.chomp
+	  puts "Enter the company name :"
+	  @company_name=gets.chomp
+	  inventory_file=File.open("inventory.txt","r+")
+	  temp_file=File.open("temp.txt","w+")
+	  inventory_file.each_line do |line|
   	  split_line=line.split(",")
   	  if split_line[0].eql?(@product_id)
   	    temp_file.write("#{@product_id},#{@product_name},#{@price},#{@stock_item},#{@company_name}")
-  		product_search_flag = 1def start_inventory_shop
-  	puts "1. Costumer"
-  	puts "2. Shopkeeper"
-  	puts "Are you a costumer or a shopkeeper ?"
-  	print "Select option 1 or 2 "
-  	user=gets.chomp
-  	user=Integer(user)
-  	if user==1
-  		costumer_obj=Costumer.new
-  		costumer_obj.display_menu
-  	end
-  end
+  		  product_search_flag = 1
   	  else
-  		temp_file.write(line)
+  		  temp_file.write(line)
   	  end
   	end
-
   	temp_file.close
   	inventory_file.close
   	if product_search_flag==1
@@ -184,11 +147,118 @@ class Shopkeeper
   	  puts "Product_id not found"
   	end
   end
+end
 
-  def check_manipulate_product
-  	puts "hello"
+class Costumer
+  include ShopInventoryModule
+
+  def initialize 
+    inventory_file=File.new("inventory.txt","a+")
+    inventory_file.close
+    temp_file=File.new("temp.txt","a+")
+    temp_file.close
+    order_file=File.new("inventory.txt","a+")
+    order_file.close
+  end
+
+  def getter
+    print "Enter the Name of customer :"
+    @costumer_name=gets.chomp
+  end
+
+  def setter
+    return costumer_name
+  end
+
+  def costumer_menu
+    answer='y'
+    while answer=='y' or answer=='Y' do
+      puts "1. List Products" 
+      puts "2. Search Product"
+      puts "3. Buy Product"
+      print "Enter the option(1-3) :"
+      option=gets.chomp
+      option=Integer(option)
+      if(option==1)
+        ShopInventoryModule.list_product
+      elsif(option==2)
+        ShopInventoryModule.search_product
+      elsif(option==3)
+        buy_product
+      else
+        puts "You have enterted the wrong choice"
+      end
+      puts "Do you want to select options again from menu?"
+      answer=gets.chomp
+    end
+  end
+
+  def buy_product
+    product_search_flag=0
+    line=""
+    print "Enter the Product_id :"
+    product_id=gets.chomp
+    inventory_file=File.open("inventory.txt","r+")
+    temp_file=File.open("temp.txt","w+")
+    inventory_file.each_line do |line|
+      split_line=line.split(",")
+      unless split_line[0].eql?(@product_id)
+        temp_file.write(line)
+      end
+    end
+    temp_file.close
+    inventory_file.close
+    temp_file=File.open("temp.txt","r+")
+    inventory_file=File.open("inventory.txt","w+")
+    temp_file.each_line do |line|
+      inventory_file.write(line)
+    end
+    inventory_file.close
+    temp_file.close
+    print "Enter the Product Name:"
+    product_name=gets.chomp
+    print "Enter the Credit card number :"
+    card_number=gets.chomp
+    print "Enter the cvv :"
+    cvv=gets.chomp
+    order_file=File.open("order.txt","a")
+    order_file.write("#{product_id},#{product_name},#{card_number},#{cvv}")
+    check_manipulate_product product_name
+  end
+
+  def check_manipulate_product product_name
+    inventory_file=File.open("inventory.txt","r+")
+    temp_file=File.open("temp.txt","w+")
+    inventory_file.each_line do |line|
+      split_line=line.split(",")
+      if split_line[1].eql?(product_name)
+        puts "Product is available"
+      end
+    end
+    temp_file.close
+    inventory_file.close
+    temp_file=File.open("temp.txt","r+")
+    inventory_file=File.open("inventory.txt","w+")
+    temp_file.each_line do |line|
+      inventory_file.write(line)
+    end
+    inventory_file.close
+    temp_file.close
   end
 end
 
-shopkeeper_obj=Shopkeeper.new
-shopkeeper_obj.shopkeeper_menu
+puts "Are you a costumer or a shopkeeper?"
+puts "1. Costumer"
+puts "2. Shopkeeper"
+print "select option 1 or 2 :"
+user=gets.chomp
+user=Integer(user)
+if user==1
+  costumer_obj=Costumer.new
+  costumer_obj.costumer_menu
+elsif user==2
+  shopkeeper_obj=Shopkeeper.new
+  shopkeeper_obj.shopkeeper_menu
+else 
+  puts "You have entered a wrong choice..!"
+end
