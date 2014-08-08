@@ -1,5 +1,5 @@
-module shop_inventory
-  def shop_inventory.list_product
+module ShopInventoryModule
+  def ShopInventoryModule.list_product
 	inventory_file=File.open("inventory.txt","r")
 	puts "List is as :"
 	puts "Product_id,Product_Name,Price,Stock_Item,Company_Name :"
@@ -7,19 +7,18 @@ module shop_inventory
 	inventory_file.close
   end
 
-  def shop_inventory.search_product
-	product_search_flag=0
-	line=""
-	print "Enter the Product Name :"
-	product_name=gets.chomp
-	inventory_file=File.open("inventory.txt","r+")
-	inventory_file.each_line do |line|
-	  split_line=line.split(",")
+  def ShopInventoryModule.search_product
+	  product_search_flag=0
+	  print "Enter the Product Name :"
+	  product_name=gets.chomp
+	  inventory_file=File.open("inventory.txt","r+")
+	  inventory_file.each_line do |line|
+	    split_line=line.split(",")
   	  if split_line[1]==(product_name)
   	    puts "Entered Product is found"
-  		puts "\n#{line}\n"
-  		product_search_flag=1
-  		break
+  		  puts "\n#{line}\n"
+  		  product_search_flag=1
+  		  break
   	  end
   	end
   	if product_search_flag==0
